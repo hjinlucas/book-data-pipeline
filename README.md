@@ -48,10 +48,9 @@ Before you start, ensure you have the following installed:
 3.  Set up your environment variables:
     a. Create a .env file in the root directory:
     plaintext
-    `    MONGODB_URI=mongodb://localhost:27017
-   `
+    `   MONGODB_URI=mongodb://localhost:27017`
 
-        b. Replace mongodb://localhost:27017 with your MongoDB connection string if necessary.
+         b. Replace mongodb://localhost:27017 with your MongoDB connection string if necessary.
 
 4.  Run the development server:
     ```
@@ -77,3 +76,39 @@ Before you start, ensure you have the following installed:
    - Home Page (Book List): http://localhost:3000
 
    - Add Book Page: http://localhost:3000/add-book
+
+### Testing APIs
+
+1. Ensure File Placement:
+   - CSV: app/data/CRWReportJob148737.csv
+   - XML: app/data/LEEANDLOW_20210707.xml
+
+Start the Server:
+`    npm run dev
+   `
+Test with Postman or Browser:
+
+URL:
+
+```
+http://localhost:3000/api/testParsing
+```
+
+Expected Response:
+
+```
+{
+    "csvRecords": [
+        {
+            "isbn": "978-3-16-148410-0",
+           ...
+        }
+    ],
+    "xmlRecords": [
+        {
+            "isbn": "9781643790664",
+            ...
+        }
+    ]
+}
+```
