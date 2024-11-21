@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Book Data Pipeline
+
+Book Data Pipeline is an open-source application for managing, parsing, and storing book metadata from various sources. Built with **Next.js** (App Router) and **TypeScript**, it allows you to ingest book data from APIs or files, validate it, and make it accessible through a clean and user-friendly interface.
+
+<br/>
+
+For [ReMo App](https://remo.app/how-remo-works)
+
+---
+
+## Features
+
+- Parse and store book metadata (e.g., Title, Author, ISBN, etc.)
+- API integration for managing book data (GET, POST support)
+- Frontend interface for viewing and adding books
+- Type-safe implementation with TypeScript
+- Built-in MongoDB support for storing metadata
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Before you start, ensure you have the following installed:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Node.js** (v16 or later)
+- **npm** or **yarn**
+- **MongoDB** (running locally or accessible via URI)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Installation
 
-## Learn More
+1.  Clone the repository:
 
-To learn more about Next.js, take a look at the following resources:
+    ```
+    git clone https://github.com/your-username/book-data-pipeline.git
+    cd book-data-pipeline
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2.  Install dependencies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    ```
+    npm install
+    ```
 
-## Deploy on Vercel
+3.  Set up your environment variables:
+    a. Create a .env file in the root directory:
+    plaintext
+    `    MONGODB_URI=mongodb://localhost:27017
+   `
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+        b. Replace mongodb://localhost:27017 with your MongoDB connection string if necessary.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4.  Run the development server:
+    ```
+    npm run dev
+    ```
+
+### Running the Application
+
+1. Start your MongoDB instance:
+
+   ```
+   mongod
+   ```
+
+2. Start the development server:
+
+   ```
+   npm run dev
+   ```
+
+3. Open your browser and navigate to:
+
+   - Home Page (Book List): http://localhost:3000
+
+   - Add Book Page: http://localhost:3000/add-book
