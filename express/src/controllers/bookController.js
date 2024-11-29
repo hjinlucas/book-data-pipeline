@@ -9,19 +9,23 @@ const handleError = (res, error) => {
 };
 
 export const addBooks = async (req, res) => {
-  try {
-    const books = req.body;
-
-    if (!Array.isArray(books)) {
-      res.status(400).json({ error: 'Request body must be an array of books' });
-      return;
+    try {
+      const books = req.body;
+  
+      if (!Array.isArray(books)) {
+        res.status(400).json({ error: 'Request body must be an array of books' });
+        return;
+      }
+  
+      const savedBooks = await Book.insertMany(books);
+      res.status(201).json({ 
+        message: 'Books successfully added',
+        books: savedBooks
+      });
+    } catch (error) {
+      handleError(res, error);
     }
-
-    res.status(201).json({ message: 'Books successfully added' });
-  } catch (error) {
-    handleError(res, error);
-  }
-};
+  };
 
 export const getAllMainGenres = async (req, res) => {
   try {

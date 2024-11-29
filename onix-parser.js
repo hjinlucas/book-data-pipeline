@@ -13,7 +13,8 @@ const CONTRIBUTOR_ROLES = {
   A07: 'Editor',
   B01: 'Translator',
   A38: 'Original Author',
-  A02: 'Co-author'
+  A02: 'Co-author',
+  A13: 'Photographor'
 };
 
 const FORMAT_CODES = {

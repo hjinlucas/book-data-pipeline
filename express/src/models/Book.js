@@ -23,11 +23,11 @@ const BookSchema = new mongoose.Schema({
     role: {
       type: String,
       required: true,
-      enum: ['Author', 'Illustrator', 'Editor', 'Translator', 'Original Author', 'Co-author']
+
     }
   }],
   copyright_date: {
-    type: Number,
+    type: mongoose.Schema.Types.Mixed,
     index: true
   },
   summary: {
@@ -59,7 +59,7 @@ const BookSchema = new mongoose.Schema({
     index: true
   },
   pages: {
-    type: Number,
+    type: mongoose.Schema.Types.Mixed,
     min: 0
   },
   isbn: {
