@@ -15,6 +15,7 @@
     "csv-parser": "^3.0.0",
     "dotenv": "^16.4.5",
     "fast-xml-parser": "^4.5.0",
+    "jsdom": "^25.0.1",
     "marcjs": "^2.0.1",
     "mongoose": "^8.8.2",
     "next": "15.0.3",
