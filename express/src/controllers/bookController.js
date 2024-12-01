@@ -25,37 +25,79 @@ export const addBooks = async (req, res) => {
     } catch (error) {
       handleError(res, error);
     }
-  };
-
-export const getAllMainGenres = async (req, res) => {
+};
+export const getBooks = async (req, res) => {
   try {
-    const genres = await Book.getAllMainGenres();
-    res.json(genres);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // Execute query with Promise.all for parallel execution
+    const [books, total] = await Promise.all([
+      Book.find({})
+        .sort({ 'title.main': 1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Book.countDocuments({})
+    ]);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(total / limit);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        books,
+        pagination: {
+          total,
+          totalPages,
+          currentPage: page,
+          limit,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1
+        }
+      }
+    });
   } catch (error) {
     handleError(res, error);
   }
 };
-
-export const getSubgenresByMain = async (req, res) => {
+export const updateBook = async (req, res) => {
   try {
-    const { mainGenre } = req.params;
-    const subgenres = await Book.getSubgenresByMain(mainGenre);
-    res.json(subgenres);
-  } catch (error) {
-    handleError(res, error);
-  }
-};
+    const { id } = req.params;
+    const updateData = req.body;
 
-export const getBooksByGenre = async (req, res) => {
-  try {
-    const { genre, page = '1', limit = '10' } = req.query;
-    const result = await Book.findBooksByGenre(
-      genre,
-      parseInt(page),
-      parseInt(limit)
+    // Check if book exists
+    const book = await Book.findById(id);
+    if (!book) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Book not found'
+      });
+    }
+
+    // Update the book
+    // { new: true } returns the updated document
+    // { runValidators: true } runs schema validation on update
+    const updatedBook = await Book.findByIdAndUpdate(
+      id,
+      updateData,
+      { 
+        new: true, 
+        runValidators: true 
+      }
     );
-    res.json(result);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        book: updatedBook
+      }
+    });
   } catch (error) {
     handleError(res, error);
   }
 };
+
+

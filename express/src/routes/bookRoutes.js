@@ -1,12 +1,10 @@
 // routes/bookRoutes.js
 import express from 'express';
-import { addBooks, getAllMainGenres, getSubgenresByMain, getBooksByGenre } from '../controllers/bookController.js';
+import { addBooks, getBooks, updateBook} from '../controllers/bookController.js';
 
 const router = express.Router();
 
 router.post('/add', addBooks);
-router.get('/genres', getAllMainGenres);
-router.get('/subgenres/:mainGenre', getSubgenresByMain);
-router.get('/', getBooksByGenre);
-
+router.get('/all', getBooks);
+router.put('/:id', updateBook);
 export default router;

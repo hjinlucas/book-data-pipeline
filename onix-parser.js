@@ -54,7 +54,7 @@ const FORMAT_CODES = {
 };
 
 function stripHTML(htmlContent) {
-  if (!htmlContent) return '';
+  if (!htmlContent) return undefined;
 
   if (typeof htmlContent === 'object') {
     if (htmlContent._text) {
@@ -67,43 +67,39 @@ function stripHTML(htmlContent) {
   }
 
   const dom = new JSDOM(htmlContent);
-  return dom.window.document.body.textContent?.trim() || '';
+  const text = dom.window.document.body.textContent?.trim();
+  return text || undefined;
 }
 
 function extractGenres(subjects) {
-  // 查找第一个包含 b070 的 subject
   const subjectWithGenre = subjects.find(s => s.b070);
 
   if (!subjectWithGenre) {
     return {
-      main: 'Not Specified',
+      main: undefined,
       subgenres: []
     };
   }
 
-  const genreString = subjectWithGenre.b070;
-  // 按斜线分割并去除空白
-  const genreParts = genreString.split('/').map(part => part.trim());
+  const genreParts = subjectWithGenre.b070.split('/').map(part => part.trim());
 
   return {
     main: genreParts[0],
-    subgenres: genreParts.slice(1).filter(Boolean) // 过滤掉空字符串
+    subgenres: genreParts.slice(1).filter(Boolean)
   };
 }
+
 function parseAudienceRange(audienceRanges) {
   if (!Array.isArray(audienceRanges)) {
     audienceRanges = audienceRanges ? [audienceRanges] : [];
   }
 
-  // 寻找美国年级范围 (b074 = 17)
   const gradeRange = audienceRanges.find(range => range.b074 == '17');
   
   if (gradeRange) {
-    // 找到起始和结束年级
     const startValues = [];
     const endValues = [];
     
-    // 遍历所有的 b075 和 b076
     const b075Array = Array.isArray(gradeRange.b075) ? gradeRange.b075 : [gradeRange.b075];
     const b076Array = Array.isArray(gradeRange.b076) ? gradeRange.b076 : [gradeRange.b076];
     
@@ -115,14 +111,14 @@ function parseAudienceRange(audienceRanges) {
       }
     });
 
-    const startGrade = startValues[0] || 'Unknown';
-    const endGrade = endValues[0] || 'Unknown';
-    
-    return `Grade ${startGrade}-${endGrade}`;
+    if (startValues[0] || endValues[0]) {
+      return `Grade ${startValues[0]}-${endValues[0]}`;
+    }
   }
   
-  return 'Grade range not specified';
+  return undefined;
 }
+
 async function parseOnixXML(filePath) {
   try {
     const xmlData = await fs.readFile(filePath, 'utf8');
@@ -172,13 +168,12 @@ async function parseOnixXML(filePath) {
         : product.descriptivedetail?.extent
           ? [product.descriptivedetail.extent]
           : [];
-     
 
       const collection = product.descriptivedetail?.collection || {};
-      const seriesName = collection.titledetail?.titleelement?.b203 || 'Not Specified';
+      const seriesName = collection.titledetail?.titleelement?.b203;
       const seriesPosition = collection.collectionsequence
-        ? parseInt(collection.collectionsequence.x481, 10) || 'Not Specified'
-        : 'Not Specified';
+        ? parseInt(collection.collectionsequence.x481, 10)
+        : undefined;
 
       const rawSummaries = textContent
         .filter(t => t.d104)
@@ -202,37 +197,35 @@ async function parseOnixXML(filePath) {
 
       const summary = rawSummaries.length
         ? rawSummaries.map(stripHTML).join(' ').trim()
-        : 'No summary available';
+        : undefined;
 
       return {
         title: {
-          main: titleDetail.b203 || 'Unknown Title',
-          subtitle: titleDetail.b029 || ''
+          main: titleDetail.b203,
+          subtitle: titleDetail.b029
         },
         creators: contributors.map(c => ({
-          name: c.b036 || 'Unknown',
-          role: CONTRIBUTOR_ROLES[c.b035] || c.b035 || 'Unknown Role'
+          name: c.b036,
+          role: CONTRIBUTOR_ROLES[c.b035] || c.b035
         })),
-        copyright_date: product.publishingdetail?.copyrightstatement?.b087 || 'Not Specified',
-        summary: summary,
+        copyright_date: product.publishingdetail?.copyrightstatement?.b087,
+        summary,
         series: {
           name: seriesName,
           position: seriesPosition
         },
-        genre: extractGenres(subjects),  // 修改这里，直接使用新的 extractGenres 函数返回的对象
-
-        form: FORMAT_CODES[product.descriptivedetail?.b014] || product.descriptivedetail?.b014 || 'Unknown Format',
-        pages: extent.find(e => e.b218 == '00')?.b219 || 'Not Specified',
-
+        genre: extractGenres(subjects),
+        form: FORMAT_CODES[product.descriptivedetail?.b014] || product.descriptivedetail?.b014,
+        pages: extent.find(e => e.b218 == '00')?.b219,
         isbn: {
-          isbn13: productIdentifiers.find(id => id.b221 == '15')?.b244 || 'Not Available',
-          isbn10: productIdentifiers.find(id => id.b221 == '02')?.b244 || 'Not Available'
+          isbn13: productIdentifiers.find(id => id.b221 == '15')?.b244,
+          isbn10: productIdentifiers.find(id => id.b221 == '02')?.b244
         },
-        type: subjects.some(s => s.b067 == '10' && s.b069.startsWith('JNF'))
+        type: subjects.some(s => s.b067 == '10' && s.b069?.startsWith('JNF'))
           ? 'Nonfiction'
           : 'Fiction',
-        publisher: product.publishingdetail?.publisher?.b081 || 'Unknown Publisher',
-        target_audience: parseAudienceRange(product.descriptivedetail?.audiencerange) || 'Not Specified'
+        publisher: product.publishingdetail?.publisher?.b081,
+        target_audience: parseAudienceRange(product.descriptivedetail?.audiencerange)
       };
     });
   } catch (error) {
