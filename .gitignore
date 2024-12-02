@@ -1,41 +1,54 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Ignore node_modules for both frontend and backend
+node_modules/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-/backend/node_modules
-/express/node_modules
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Ignore logs
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# Ignore package lock files
+package-lock.json
+yarn.lock
 
-# vercel
-.vercel
+# Ignore build output
+frontend/.next/
+frontend/out/
+frontend/build/
+express/dist/
+express/build/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+
+# Ignore IDE/editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Ignore testing-related files
+coverage/
+*.lcov
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.bak
+*.old
+
+# Ignore frontend public output if not versioned
+frontend/public/static/
+frontend/public/assets/
+
+# Ignore compiled files for backend
+*.js.map
+*.d.ts
+
+# Ignore Mac system files
+.DS_Store
+Thumbs.db
