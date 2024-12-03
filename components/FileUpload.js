@@ -10,11 +10,18 @@ export default function FileUpload() {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    if (selectedFile && selectedFile.type.includes('xml')) {
+    const allowedTypes = [
+      'application/xml', 
+      'text/xml',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-excel'
+    ];
+    
+    if (selectedFile && (allowedTypes.includes(selectedFile.type) || selectedFile.name.endsWith('.xlsx'))) {
       setFile(selectedFile);
       setError(null);
     } else {
-      setError('Please select an XML file');
+      setError('Please select an XML or XLSX file');
       setFile(null);
     }
   };
@@ -105,7 +112,7 @@ export default function FileUpload() {
         </label>
         <input
           type="file"
-          accept=".xml"
+          accept=".xml, .xlsx"
           onChange={handleFileChange}
           className="block w-full text-sm text-gray-500
             file:mr-4 file:py-2 file:px-4
