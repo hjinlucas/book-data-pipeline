@@ -79,9 +79,40 @@ export default function Home() {
 
   return (
     <main className="min-h-screen p-8 bg-white dark:bg-zinc-900 transition-colors duration-200">
-      <div className="flex justify-between items-center mb-8">
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto mb-16">
+        <div className="text-center space-y-8 mb-12">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 text-transparent bg-clip-text">
+            Book Data Pipeline
+          </h1>
+          <p className="text-xl text-zinc-600 dark:text-zinc-400 max-w-3xl mx-auto">
+            A modern solution for managing and transforming book metadata. Upload XML or Excel files, 
+            edit book information, and maintain a clean, structured database of your literary collection.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <div className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span>XML Support</span>
+            </div>
+            <div className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>Excel Support</span>
+            </div>
+            <div className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7zm8-1v18M3 11h18" />
+              </svg>
+              <span>Batch Processing</span>
+            </div>
+          </div>
+        </div>
+
         {/* Database Status */}
-        <div className={`flex items-center gap-2 p-2 rounded-lg ${
+        <div className={`flex items-center gap-2 p-2 rounded-lg max-w-fit mx-auto ${
           dbStatus.connected 
             ? 'bg-emerald-100 dark:bg-emerald-900/50' 
             : 'bg-red-100 dark:bg-red-900/50'
@@ -118,9 +149,6 @@ export default function Home() {
         </div>
       </div>
 
-      <h1 className="text-4xl font-bold text-center mb-8 text-zinc-800 dark:text-zinc-100">
-        Book Data Pipeline
-      </h1>
       <FileUpload />
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

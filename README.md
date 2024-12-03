@@ -1,40 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 📚 Book Data Pipeline
 
-## Getting Started
+A modern web application for managing and transforming book metadata, built with Next.js and MongoDB.
 
-First, run the development server:
+## ✨ Features
 
+- 📄 Support for multiple file formats (XML, Excel)
+- 🔄 Batch processing of book metadata
+- 📝 Interactive book editing interface
+- 🌓 Dark mode support
+- 💾 MongoDB integration for data persistence
+- 📱 Responsive design for all devices
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- MongoDB instance (local or remote)
+- npm or yarn package manager
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/book-data-pipeline.git
+cd book-data-pipeline
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up environment variables:
+Create a `.env.local` file in the root directory with:
+```env
+MONGODB_URI=your_mongodb_connection_string
+```
+
+4. Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at `http://localhost:3000`
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## 🔧 Usage
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### File Upload
+1. Click the "Upload File" button
+2. Select your XML or Excel file
+3. The system will automatically process and validate the data
+4. View the results in the book grid
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### Book Management
+- **View Books**: All books are displayed in a responsive grid
+- **Edit Books**: Click the edit button on any book card to modify its details
+- **Dark Mode**: System automatically adapts to your device's theme preference
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Supported File Formats
 
-## Learn More
+#### XML Format
+```xml
+<books>
+  <book>
+    <title>Book Title</title>
+    <author>Author Name</author>
+    <isbn>1234567890</isbn>
+    <published>2023</published>
+  </book>
+</books>
+```
 
-To learn more about Next.js, take a look at the following resources:
+#### Excel Format
+Required columns:
+- Title
+- Author
+- ISBN
+- Published Date
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## 🛠 Technical Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Frontend**: Next.js, React, Tailwind CSS
+- **Backend**: Node.js, MongoDB
+- **File Processing**: Custom XML and Excel parsers
+- **Styling**: Modern UI with dark mode support
 
-## Deploy on Vercel
+## 📝 Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Support
+
+For support, please open an issue in the GitHub repository or contact the maintainers.
