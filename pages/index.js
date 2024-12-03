@@ -80,7 +80,7 @@ export default function Home() {
   return (
     <main className="min-h-screen p-8">
       <h1 className="text-3xl font-bold text-center mb-8">
-        ONIX Book Data Pipeline
+        Book Data Pipeline
       </h1>
       <FileUpload />
       <div className="container mx-auto p-4">

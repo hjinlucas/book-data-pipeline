@@ -107,21 +107,42 @@ export default function FileUpload() {
   return (
     <div className="max-w-2xl mx-auto p-6">
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Upload ONIX XML File
-        </label>
-        <input
-          type="file"
-          accept=".xml, .xlsx"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-500
-            file:mr-4 file:py-2 file:px-4
-            file:rounded-md file:border-0
-            file:text-sm file:font-semibold
-            file:bg-blue-50 file:text-blue-700
-            hover:file:bg-blue-100"
-          disabled={isUploading}
-        />
+        <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+          <input
+            type="file"
+            accept=".xml, .xlsx"
+            onChange={handleFileChange}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            disabled={isUploading}
+          />
+          <div className="space-y-2">
+            <svg 
+              className="mx-auto h-12 w-12 text-gray-400"
+              stroke="currentColor"
+              fill="none"
+              viewBox="0 0 48 48"
+              aria-hidden="true"
+            >
+              <path
+                d="M24 8l-8 8h6v16h4V16h6l-8-8z"
+                fill="currentColor"
+              />
+              <path
+                d="M4 28v12a4 4 0 004 4h32a4 4 0 004-4V28"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="text-sm font-medium text-gray-700">
+              Upload Book Data File (XML/XLSX)
+            </div>
+            {file && (
+              <p className="text-sm text-gray-500">
+                Selected: {file.name}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
 
       {error && (
@@ -159,13 +180,15 @@ export default function FileUpload() {
         </div>
       )}
 
-      <button
-        onClick={handleUpload}
-        disabled={!file || isUploading}
-        className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-      >
-        {isUploading ? 'Processing...' : 'Upload and Parse'}
-      </button>
+      {!parsedData && (
+        <button
+          onClick={handleUpload}
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+          disabled={!file || isUploading}
+        >
+          {isUploading ? 'Processing...' : 'Parse and Upload'}
+        </button>
+      )}
     </div>
   );
 }
