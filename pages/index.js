@@ -78,36 +78,63 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold text-center mb-8">
+    <main className="min-h-screen p-8 bg-white dark:bg-zinc-900 transition-colors duration-200">
+      <div className="flex justify-between items-center mb-8">
+        {/* Database Status */}
+        <div className={`flex items-center gap-2 p-2 rounded-lg ${
+          dbStatus.connected 
+            ? 'bg-emerald-100 dark:bg-emerald-900/50' 
+            : 'bg-red-100 dark:bg-red-900/50'
+        }`}>
+          <div className="w-4 h-4">
+            {dbStatus.connected ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+                <path 
+                  fill="#10B981" 
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+                <path 
+                  fill="#EF4444" 
+                  d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
+                />
+              </svg>
+            )}
+          </div>
+          <span className={`text-sm font-medium ${
+            dbStatus.connected 
+              ? 'text-emerald-800 dark:text-emerald-100' 
+              : 'text-red-800 dark:text-red-100'
+          }`}>
+            Database Status: {dbStatus.connected ? 'Connected' : 'Disconnected'}
+            {dbStatus.error && (
+              <span className="block text-xs text-red-600 dark:text-red-400">
+                Error: {dbStatus.error}
+              </span>
+            )}
+          </span>
+        </div>
+      </div>
+
+      <h1 className="text-4xl font-bold text-center mb-8 text-zinc-800 dark:text-zinc-100">
         Book Data Pipeline
       </h1>
       <FileUpload />
       <div className="container mx-auto p-4">
-        <div className="mb-4 p-4 rounded-lg bg-gray-100">
-          <h2 className="text-lg font-bold">Database Status</h2>
-          {dbStatus.connected ? (
-            <p className="text-green-600">Connected to MongoDB</p>
-          ) : (
-            <div className="text-red-600">
-              <p>Not connected to MongoDB</p>
-              {dbStatus.error && <p>Error: {dbStatus.error}</p>}
-            </div>
-          )}
-        </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {books.map((book) => (
             <div
               key={book._id}
-              className="border p-4 rounded-lg h-72 flex flex-col justify-between relative bg-white shadow-sm hover:shadow-md transition-shadow"
+              className="border p-4 rounded-lg h-72 flex flex-col justify-between relative bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="space-y-3">
                 <span
                   className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${
                     isBookComplete(book)
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
+                      ? "bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-100"
+                      : "bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-100"
                   }`}
                 >
                   {isBookComplete(book) ? "Complete" : "Incomplete"}
@@ -115,29 +142,38 @@ export default function Home() {
 
                 <div className="pt-6">
                   <h2
-                    className="text-lg font-semibold truncate"
+                    className="text-lg font-semibold truncate text-zinc-900 dark:text-zinc-100"
                     title={book.title.main}
                   >
                     {book.title.main}
                   </h2>
 
-                  <p className="text-sm text-gray-600 mt-2 truncate">
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2 truncate">
                     By: {book.creators.map((creator) => creator.name).join(", ")}
                   </p>
 
-                  <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2 line-clamp-2">
                     {book.summary}
                   </p>
 
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-2">
                     ISBN: {book.isbn.isbn13}
                   </p>
                 </div>
               </div>
 
               <button
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-4 transition-colors"
                 onClick={() => handleEdit(book)}
+                className="w-[120px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400 
+                bg-gradient-to-t from-[#D8D9DB] via-white to-[#FDFDFD] dark:from-zinc-700 dark:via-zinc-600 dark:to-zinc-700
+                text-[14px] font-semibold text-[#606060] dark:text-zinc-200 shadow-sm
+                transition-all duration-200
+                hover:shadow-[0_4px_3px_1px_#FCFCFC,0_6px_8px_#D6D7D9,0_-4px_4px_#CECFD1,0_-6px_4px_#FEFEFE,inset_0_0_3px_3px_#CECFD1]
+                dark:hover:shadow-[0_4px_3px_1px_#18181B,0_6px_8px_#27272A,0_-4px_4px_#27272A,0_-6px_4px_#18181B,inset_0_0_3px_3px_#3F3F46]
+                active:shadow-[0_4px_3px_1px_#FCFCFC,0_6px_8px_#D6D7D9,0_-4px_4px_#CECFD1,0_-6px_4px_#FEFEFE,inset_0_0_5px_3px_#999999,inset_0_0_30px_#aaaaaa]
+                dark:active:shadow-[0_4px_3px_1px_#18181B,0_6px_8px_#27272A,0_-4px_4px_#27272A,0_-6px_4px_#18181B,inset_0_0_5px_3px_#3F3F46,inset_0_0_30px_#52525B]
+                focus:shadow-[0_4px_3px_1px_#FCFCFC,0_6px_8px_#D6D7D9,0_-4px_4px_#CECFD1,0_-6px_4px_#FEFEFE,inset_0_0_5px_3px_#999999,inset_0_0_30px_#aaaaaa]
+                dark:focus:shadow-[0_4px_3px_1px_#18181B,0_6px_8px_#27272A,0_-4px_4px_#27272A,0_-6px_4px_#18181B,inset_0_0_5px_3px_#3F3F46,inset_0_0_30px_#52525B]"
               >
                 Edit
               </button>
@@ -145,21 +181,42 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="mt-4 flex justify-center gap-2">
+        <div className="mt-8 flex items-center justify-center gap-4">
           <button
-            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
+            className="w-[100px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400 
+            bg-gradient-to-t from-[#D8D9DB] via-white to-[#FDFDFD] dark:from-zinc-700 dark:via-zinc-600 dark:to-zinc-700
+            text-[14px] font-semibold text-[#606060] dark:text-zinc-200 shadow-sm
+            transition-all duration-200
+            disabled:opacity-50 disabled:cursor-not-allowed
+            enabled:hover:shadow-[0_4px_3px_1px_#FCFCFC,0_6px_8px_#D6D7D9,0_-4px_4px_#CECFD1,0_-6px_4px_#FEFEFE,inset_0_0_3px_3px_#CECFD1]
+            enabled:dark:hover:shadow-[0_4px_3px_1px_#18181B,0_6px_8px_#27272A,0_-4px_4px_#27272A,0_-6px_4px_#18181B,inset_0_0_3px_3px_#3F3F46]"
           >
             Previous
           </button>
-          <span className="px-4 py-2">
-            Page {currentPage} of {totalPages}
-          </span>
+
+          <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
+            <span className="font-medium">Page</span>
+            <span className="bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg font-semibold min-w-[40px] text-center">
+              {currentPage}
+            </span>
+            <span className="font-medium">of</span>
+            <span className="bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg font-semibold min-w-[40px] text-center">
+              {totalPages}
+            </span>
+          </div>
+
           <button
-            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
+            className="w-[100px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400 
+            bg-gradient-to-t from-[#D8D9DB] via-white to-[#FDFDFD] dark:from-zinc-700 dark:via-zinc-600 dark:to-zinc-700
+            text-[14px] font-semibold text-[#606060] dark:text-zinc-200 shadow-sm
+            transition-all duration-200
+            disabled:opacity-50 disabled:cursor-not-allowed
+            enabled:hover:shadow-[0_4px_3px_1px_#FCFCFC,0_6px_8px_#D6D7D9,0_-4px_4px_#CECFD1,0_-6px_4px_#FEFEFE,inset_0_0_3px_3px_#CECFD1]
+            enabled:dark:hover:shadow-[0_4px_3px_1px_#18181B,0_6px_8px_#27272A,0_-4px_4px_#27272A,0_-6px_4px_#18181B,inset_0_0_3px_3px_#3F3F46]"
           >
             Next
           </button>
