@@ -1,6 +1,6 @@
 # 📚 Book Data Pipeline
 
-A modern web application for managing and transforming book metadata, built with Next.js and MongoDB.
+The Book Data Pipeline is a collaborative project developed at Northeastern University, specifically designed to enhance and streamline [ReMo](https://remo.app/)'s book metadata management system. It is a modern web application for managing and transforming book metadata, built with Next.js and MongoDB. 
 
 ## ✨ Features
 
@@ -10,6 +10,18 @@ A modern web application for managing and transforming book metadata, built with
 - 🌓 Dark mode support
 - 💾 MongoDB integration for data persistence
 - 📱 Responsive design for all devices
+
+## ✨ Screenshots
+
+<img width="1156" alt="image" src="https://github.com/user-attachments/assets/d15f4e6d-9ae3-4d5e-b868-d9c76bb80095">
+
+<img width="1287" alt="image" src="https://github.com/user-attachments/assets/79112892-48d6-40c4-a0bc-1d2e2fa09d68">
+
+<img width="1398" alt="image" src="https://github.com/user-attachments/assets/8681bad1-55b4-48e1-9778-d37ce43f2724">
+
+
+
+
 
 ## 🚀 Getting Started
 
@@ -61,27 +73,6 @@ The application will be available at `http://localhost:3000`
 - **View Books**: All books are displayed in a responsive grid
 - **Edit Books**: Click the edit button on any book card to modify its details
 - **Dark Mode**: System automatically adapts to your device's theme preference
-
-### Supported File Formats
-
-#### XML Format
-```xml
-<books>
-  <book>
-    <title>Book Title</title>
-    <author>Author Name</author>
-    <isbn>1234567890</isbn>
-    <published>2023</published>
-  </book>
-</books>
-```
-
-#### Excel Format
-Required columns:
-- Title
-- Author
-- ISBN
-- Published Date
 
 ## 🛠 Technical Stack
 
