@@ -35,7 +35,7 @@ The Book Data Pipeline is a collaborative project developed at Northeastern Univ
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/book-data-pipeline.git
+git clone https://github.com/hjinlucas/book-data-pipeline.git
 cd book-data-pipeline
 ```
 
@@ -46,7 +46,9 @@ npm install
 yarn install
 ```
 
-3. Set up environment variables:
+3. We sugguest test directly since we have db running(till Dec.12)
+
+You can set up your own environment variables(mongodb):
 Create a `.env.local` file in the root directory with:
 ```env
 MONGODB_URI=your_mongodb_connection_string
