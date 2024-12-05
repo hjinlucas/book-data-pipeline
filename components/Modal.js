@@ -1,16 +1,26 @@
 import { useState } from "react";
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 
 const Modal = ({ book, onClose, onSave }) => {
   const [updatedBook, setUpdatedBook] = useState({
     ...book,
     creators: book.creators || [],
+    title: {
+      main: book.title?.main || "",
+      subtitle: book.title?.subtitle || "",
+    },
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name.startsWith("series.")) {
+    if (name.startsWith("title.")) {
+      const titleField = name.split(".")[1];
+      setUpdatedBook({
+        ...updatedBook,
+        title: { ...updatedBook.title, [titleField]: value },
+      });
+    } else if (name.startsWith("series.")) {
       const seriesField = name.split(".")[1];
       setUpdatedBook({
         ...updatedBook,
@@ -52,12 +62,12 @@ const Modal = ({ book, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 pt-20">
-      <div 
-        className="relative flex h-full mx-auto flex-col overflow-hidden border dark:bg-black bg-gray-300 hover:bg-gray-200 dark:hover:bg-gray-950 lg:w-[900px] w-[80%] rounded-[24px]"
-      >
+      <div className="relative flex h-full mx-auto flex-col overflow-hidden border dark:bg-black bg-gray-300 hover:bg-gray-200 dark:hover:bg-gray-950 lg:w-[900px] w-[80%] rounded-[24px]">
         <div className="sticky top-0 z-10 bg-gray-300 dark:bg-black border-b border-zinc-300 dark:border-zinc-700 p-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-4xl text-zinc-950 dark:text-zinc-50">Edit Book</h2>
+            <h2 className="text-4xl text-zinc-950 dark:text-zinc-50">
+              Edit Book
+            </h2>
             <div className="flex gap-3">
               <button
                 type="button"
@@ -80,12 +90,16 @@ const Modal = ({ book, onClose, onSave }) => {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Basic Information Section */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">Basic Information</h3>
+                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">
+                  Basic Information
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Title and Subtitle */}
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Title</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Title
+                      </label>
                       <input
                         type="text"
                         name="title.main"
@@ -95,7 +109,9 @@ const Modal = ({ book, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Subtitle</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Subtitle
+                      </label>
                       <input
                         type="text"
                         name="title.subtitle"
@@ -109,7 +125,9 @@ const Modal = ({ book, onClose, onSave }) => {
                   {/* ISBN */}
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">ISBN-13</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        ISBN-13
+                      </label>
                       <input
                         type="text"
                         name="isbn.isbn13"
@@ -119,7 +137,9 @@ const Modal = ({ book, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">ISBN-10</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        ISBN-10
+                      </label>
                       <input
                         type="text"
                         name="isbn.isbn10"
@@ -135,7 +155,9 @@ const Modal = ({ book, onClose, onSave }) => {
               {/* Creators Section */}
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Creators</h3>
+                  <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+                    Creators
+                  </h3>
                   <button
                     type="button"
                     onClick={handleAddCreator}
@@ -150,14 +172,18 @@ const Modal = ({ book, onClose, onSave }) => {
                       <input
                         type="text"
                         value={creator.name}
-                        onChange={(e) => handleCreatorChange(index, "name", e.target.value)}
+                        onChange={(e) =>
+                          handleCreatorChange(index, "name", e.target.value)
+                        }
                         className="flex-1 p-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
                         placeholder="Name"
                       />
                       <input
                         type="text"
                         value={creator.role}
-                        onChange={(e) => handleCreatorChange(index, "role", e.target.value)}
+                        onChange={(e) =>
+                          handleCreatorChange(index, "role", e.target.value)
+                        }
                         className="flex-1 p-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
                         placeholder="Role"
                       />
@@ -175,12 +201,16 @@ const Modal = ({ book, onClose, onSave }) => {
 
               {/* Details Section */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">Details</h3>
+                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">
+                  Details
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     {/* Publisher Info */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Publisher</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Publisher
+                      </label>
                       <input
                         type="text"
                         name="publisher"
@@ -190,7 +220,9 @@ const Modal = ({ book, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Copyright Date</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Copyright Date
+                      </label>
                       <input
                         type="number"
                         name="copyright_date"
@@ -200,7 +232,9 @@ const Modal = ({ book, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Pages</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Pages
+                      </label>
                       <input
                         type="number"
                         name="pages"
@@ -214,7 +248,9 @@ const Modal = ({ book, onClose, onSave }) => {
                   <div className="space-y-4">
                     {/* Classification */}
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Type</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Type
+                      </label>
                       <input
                         type="text"
                         name="type"
@@ -224,7 +260,9 @@ const Modal = ({ book, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Form</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Form
+                      </label>
                       <input
                         type="text"
                         name="form"
@@ -234,7 +272,9 @@ const Modal = ({ book, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Target Audience</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Target Audience
+                      </label>
                       <input
                         type="text"
                         name="target_audience"
@@ -249,12 +289,16 @@ const Modal = ({ book, onClose, onSave }) => {
 
               {/* Series and Genre Section */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">Series & Genre</h3>
+                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">
+                  Series & Genre
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Series */}
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Series Name</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Series Name
+                      </label>
                       <input
                         type="text"
                         name="series.name"
@@ -264,7 +308,9 @@ const Modal = ({ book, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Series Position</label>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Series Position
+                      </label>
                       <input
                         type="number"
                         name="series.position"
@@ -277,7 +323,9 @@ const Modal = ({ book, onClose, onSave }) => {
 
                   {/* Genre */}
                   <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">Genre</label>
+                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                      Genre
+                    </label>
                     <input
                       type="text"
                       name="genre.main"
@@ -291,7 +339,9 @@ const Modal = ({ book, onClose, onSave }) => {
 
               {/* Summary Section */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">Summary</h3>
+                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">
+                  Summary
+                </h3>
                 <textarea
                   name="summary"
                   value={updatedBook.summary}
