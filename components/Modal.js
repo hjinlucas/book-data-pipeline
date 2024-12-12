@@ -9,29 +9,42 @@ const Modal = ({ book, onClose, onSave }) => {
       main: book.title?.main || "",
       subtitle: book.title?.subtitle || "",
     },
+    isbn: {
+      isbn13: book.isbn?.isbn13 || "",
+      isbn10: book.isbn?.isbn10 || "",
+    },
+    series: {
+      name: book.series?.name || "",
+      position: book.series?.position || ""
+    },
+    genre: {
+      main: book.genre?.main || "",
+      subgenres: (book.genre?.subgenres && book.genre?.subgenres.join(", ")) || ""
+    },
+    publisher: book.publisher || "",
+    target_audience: book.target_audience || "",
+    form: book.form || "",
+    pages: book.pages || 0,
+    type: book.type || "",
+    summary: book.summary || "",
+    copyright_date: book.copyright_date || ""
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (name.startsWith("title.")) {
-      const titleField = name.split(".")[1];
-      setUpdatedBook({
-        ...updatedBook,
-        title: { ...updatedBook.title, [titleField]: value },
-      });
+      const field = name.split(".")[1];
+      setUpdatedBook({ ...updatedBook, title: { ...updatedBook.title, [field]: value } });
     } else if (name.startsWith("series.")) {
-      const seriesField = name.split(".")[1];
-      setUpdatedBook({
-        ...updatedBook,
-        series: { ...updatedBook.series, [seriesField]: value },
-      });
+      const field = name.split(".")[1];
+      setUpdatedBook({ ...updatedBook, series: { ...updatedBook.series, [field]: value } });
     } else if (name.startsWith("isbn.")) {
-      const isbnField = name.split(".")[1];
-      setUpdatedBook({
-        ...updatedBook,
-        isbn: { ...updatedBook.isbn, [isbnField]: value },
-      });
+      const field = name.split(".")[1];
+      setUpdatedBook({ ...updatedBook, isbn: { ...updatedBook.isbn, [field]: value } });
+    } else if (name.startsWith("genre.")) {
+      const field = name.split(".")[1];
+      setUpdatedBook({ ...updatedBook, genre: { ...updatedBook.genre, [field]: value } });
     } else {
       setUpdatedBook({ ...updatedBook, [name]: value });
     }
@@ -46,7 +59,7 @@ const Modal = ({ book, onClose, onSave }) => {
   const handleAddCreator = () => {
     setUpdatedBook({
       ...updatedBook,
-      creators: [...updatedBook.creators, { name: "", role: "" }],
+      creators: [...updatedBook.creators, { name: "", role: "" }]
     });
   };
 
@@ -57,7 +70,20 @@ const Modal = ({ book, onClose, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(updatedBook);
+    // 在提交前处理genre.subgenres从字符串转为数组
+    const subgenresArray = updatedBook.genre.subgenres
+      ? updatedBook.genre.subgenres.split(",").map(s => s.trim()).filter(Boolean)
+      : [];
+
+    const finalBookData = {
+      ...updatedBook,
+      genre: {
+        main: updatedBook.genre.main,
+        subgenres: subgenresArray
+      }
+    };
+
+    onSave(finalBookData);
   };
 
   return (
@@ -88,6 +114,7 @@ const Modal = ({ book, onClose, onSave }) => {
         <div className="flex-1 overflow-y-auto">
           <div className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
+
               {/* Basic Information Section */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-4">
@@ -251,13 +278,16 @@ const Modal = ({ book, onClose, onSave }) => {
                       <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
                         Type
                       </label>
-                      <input
-                        type="text"
+                      <select
                         name="type"
                         value={updatedBook.type}
                         onChange={handleChange}
                         className="w-full p-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
-                      />
+                      >
+                        <option value="">Select Type</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Nonfiction">Nonfiction</option>
+                      </select>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
@@ -312,7 +342,7 @@ const Modal = ({ book, onClose, onSave }) => {
                         Series Position
                       </label>
                       <input
-                        type="number"
+                        type="text"
                         name="series.position"
                         value={updatedBook.series.position}
                         onChange={handleChange}
@@ -322,17 +352,31 @@ const Modal = ({ book, onClose, onSave }) => {
                   </div>
 
                   {/* Genre */}
-                  <div>
-                    <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
-                      Genre
-                    </label>
-                    <input
-                      type="text"
-                      name="genre.main"
-                      value={updatedBook.genre.main}
-                      onChange={handleChange}
-                      className="w-full p-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
-                    />
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Main Genre
+                      </label>
+                      <input
+                        type="text"
+                        name="genre.main"
+                        value={updatedBook.genre.main}
+                        onChange={handleChange}
+                        className="w-full p-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                        Subgenres (comma separated)
+                      </label>
+                      <input
+                        type="text"
+                        name="genre.subgenres"
+                        value={updatedBook.genre.subgenres}
+                        onChange={handleChange}
+                        className="w-full p-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

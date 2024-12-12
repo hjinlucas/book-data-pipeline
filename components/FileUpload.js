@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import parseOnixXML from '../utils/parseOnixXML'; // 假设utils目录下存放上面解析函数文件
 
 export default function FileUpload() {
   const [file, setFile] = useState(null);
@@ -17,7 +18,7 @@ export default function FileUpload() {
       'application/vnd.ms-excel'
     ];
     
-    if (selectedFile && (allowedTypes.includes(selectedFile.type) || selectedFile.name.endsWith('.xlsx'))) {
+    if (selectedFile && (allowedTypes.includes(selectedFile.type) || selectedFile.name.endsWith('.xlsx') || selectedFile.name.endsWith('.xml'))) {
       setFile(selectedFile);
       setError(null);
     } else {
@@ -32,24 +33,22 @@ export default function FileUpload() {
       return;
     }
 
+    // 前端解析XML文件
     setIsUploading(true);
     setError(null);
     setUploadProgress(0);
 
-    const formData = new FormData();
-    formData.append('file', file);
-
     try {
-      const response = await axios.post('http://localhost:5050/api/upload/parse', formData, {
-        onUploadProgress: (progressEvent) => {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          setUploadProgress(progress);
-        },
-      });
+      // 使用FileReader读取文件内容
+      const fileContent = await readFileAsText(file);
+      
+      // 解析XML为JSON数据
+      const books = parseOnixXML(fileContent);
 
-      setParsedData(response.data.data);
+      setParsedData(books);
+      setUploadProgress(100); 
     } catch (err) {
-      setError(err.response?.data?.message || 'Error uploading file');
+      setError('Error parsing file: ' + (err.message));
     } finally {
       setIsUploading(false);
     }
@@ -62,10 +61,10 @@ export default function FileUpload() {
     setError(null);
     setUploadProgress(0);
 
-    const BATCH_SIZE = 20; // Reduced from 50 to 20 books at a time
+    const BATCH_SIZE = 20;
     const batches = [];
     
-    // Split books into batches
+    // 分批处理
     for (let i = 0; i < parsedData.length; i += BATCH_SIZE) {
       batches.push(parsedData.slice(i, i + BATCH_SIZE));
     }
@@ -73,20 +72,27 @@ export default function FileUpload() {
     try {
       let successCount = 0;
       
-      // Process batches sequentially
+      // 顺序处理每一批
       for (let i = 0; i < batches.length; i++) {
         const batch = batches[i];
         try {
-          await axios.post('http://localhost:5050/api/books/batch', { books: batch });
+          await axios.post('http://localhost:3000/api/books/add', batch, {
+            onUploadProgress: (progressEvent) => {
+              if (progressEvent.lengthComputable) {
+                const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                setUploadProgress(progress);
+              }
+            }
+          });
           successCount += batch.length;
           
-          // Update progress
+          // 更新进度
           const progress = Math.round((successCount / parsedData.length) * 100);
           setUploadProgress(progress);
         } catch (err) {
           console.error(`Error saving batch ${i}:`, err);
           setError(`Error saving batch ${i + 1} of ${batches.length}: ${err.response?.data?.message || err.message}`);
-          // Continue with next batch despite error
+          // 尽管出错，继续尝试后面的批次
         }
       }
 
@@ -102,6 +108,15 @@ export default function FileUpload() {
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const readFileAsText = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = (e) => reject(e);
+      reader.readAsText(file);
+    });
   };
 
   return (
@@ -134,7 +149,7 @@ export default function FileUpload() {
               />
             </svg>
             <div className="text-sm font-medium text-gray-700">
-              Upload Book Data File (XML/XLSX)
+              Upload Book Data File (XML)
             </div>
             {file && (
               <p className="text-sm text-gray-500">

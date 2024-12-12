@@ -6,7 +6,7 @@ import parseXLSX from '../parser/xlsx-parser.js';
 import { transformXLSXToDBSchema, transformONIXToDBSchema } from '../lib/transformers.js';
 import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
-import mongoose from 'mongoose'; // Assuming mongoose is used for database operations
+
 
 const router = express.Router();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
