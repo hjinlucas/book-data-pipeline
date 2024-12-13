@@ -153,6 +153,8 @@ The schema includes several indexed fields for optimized querying and search ope
 
 ## Environment Variables
 
+We suggest using the existing mongo in codebase for now, it will last till the end of 2024. Otherwise you need to match the database and collection name as well: [test] [books]
+
 Create a `.env` file in the express directory with:
 
 ```env
