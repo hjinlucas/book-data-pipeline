@@ -62,6 +62,18 @@ export default function Home() {
     }
   };
 
+  const handleDelete = async (bookId) => {
+    if (window.confirm('Are you sure you want to delete this book?')) {
+      try {
+        await axios.delete(`http://localhost:3000/api/books/${bookId}`);
+        // Refresh the books list after deletion
+        fetchBooks();
+      } catch (error) {
+        console.error("Error deleting book:", error);
+      }
+    }
+  };
+
   const isFieldEmpty = (value) => {
     if (value === undefined || value === null) return true;
     if (typeof value === "string") return value.trim() === "";
@@ -165,12 +177,20 @@ export default function Home() {
                 </div>
               </div>
 
-              <button
-                onClick={() => handleEdit(book)}
-                className="w-[120px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400"
-              >
-                Edit
-              </button>
+              <div className="mt-2 flex gap-2">
+                <button
+                  onClick={() => handleEdit(book)}
+                  className="w-[120px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(book._id)}
+                  className="w-[120px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
