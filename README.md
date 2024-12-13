@@ -4,7 +4,7 @@ The Book Data Pipeline is a collaborative project developed at Northeastern Univ
 
 ## ✨ Features
 
-- 📄 Support for multiple file formats (XML, Excel)
+- 📄 Support for multiple file formats (XML)
 - 🔄 Batch processing of book metadata
 - 📝 Interactive book editing interface
 - 🌓 Dark mode support
@@ -31,58 +31,79 @@ The Book Data Pipeline is a collaborative project developed at Northeastern Univ
 - MongoDB instance (local or remote)
 - npm or yarn package manager
 
-### Installation
+### Installation & Setup
 
-1. Clone the repository:
+1. First, set up the backend:
 ```bash
-git clone https://github.com/hjinlucas/book-data-pipeline.git
-cd book-data-pipeline
-```
-
-2. Install dependencies:
-```bash
+cd express
 npm install
-# or
-yarn install
+npm run dev
 ```
 
-3. We sugguest test directly since we have db running(till Dec.12)
+2. Then, in a new terminal, set up the frontend:
+```bash
+# From the root directory
+npm install
+npm run dev
+```
 
-You can set up your own environment variables(mongodb):
-Create a `.env.local` file in the root directory with:
+The application will be running at:
+- Backend: http://localhost:3000
+- Frontend: http://localhost:3001
+
+## Database Schema
+
+The application uses MongoDB with the following book schema:
+
+```javascript
+{
+  title: {
+    main: String,    // Main title of the book
+    subtitle: String // Subtitle if any
+  },
+  creators: [{       // Authors, editors, etc.
+    name: String,
+    role: String
+  }],
+  copyright_date: Number,  // Publication year
+  summary: String,         // Book description
+  series: {
+    name: String,         // Series name if part of one
+    position: Mixed       // Position in series
+  },
+  genre: {
+    main: String,        // Main genre
+    subgenres: [String]  // List of subgenres
+  },
+  form: String,          // Book format
+  pages: Number,         // Number of pages
+  isbn: {
+    isbn13: String,      // 13-digit ISBN
+    isbn10: String       // 10-digit ISBN
+  }
+}
+```
+
+## API Endpoints
+
+- `GET /api/books/all` - Get paginated list of books
+- `PUT /api/books/:id` - Update a book
+- `DELETE /api/books/:id` - Delete a book
+- `POST /api/books/add` - Add new books
+
+## Environment Variables
+
+Create a `.env` file in the express directory with:
+
 ```env
 MONGODB_URI=your_mongodb_connection_string
 ```
 
-4. Start the development server:
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Technologies Used
 
-The application will be available at `http://localhost:3000`
-
-## 🔧 Usage
-
-### File Upload
-1. Click the "Upload File" button
-2. Select your XML or Excel file
-3. The system will automatically process and validate the data
-4. View the results in the book grid
-
-### Book Management
-- **View Books**: All books are displayed in a responsive grid
-- **Edit Books**: Click the edit button on any book card to modify its details
-- **Dark Mode**: System automatically adapts to your device's theme preference
-
-## 🛠 Technical Stack
-
-- **Frontend**: Next.js, React, Tailwind CSS
-- **Backend**: Node.js, MongoDB
-- **File Processing**: Custom XML and Excel parsers
-- **Styling**: Modern UI with dark mode support
-
+- Frontend: Next.js, React, Axios, Tailwind CSS
+- Backend: Express.js, MongoDB, Mongoose
+- Development: Node.js
 ## 📝 Contributing
 
 1. Fork the repository
@@ -98,3 +119,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🤝 Support
 
 For support, please open an issue in the GitHub repository or contact the maintainers.
+
+
