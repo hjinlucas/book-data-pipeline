@@ -40,7 +40,7 @@ npm install
 npm run dev
 ```
 
-2. Then, in a new terminal, set up the frontend:
+2. Then, in a new terminal(project root directory not in 'express' directory), set up the frontend:
 ```bash
 # From the root directory
 npm install
