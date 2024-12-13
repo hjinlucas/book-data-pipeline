@@ -10,6 +10,7 @@ export default function Home() {
   const [dbStatus, setDbStatus] = useState({ connected: false, error: null });
   const [editingBook, setEditingBook] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pageInput, setPageInput] = useState('');
 
   useEffect(() => {
     fetchBooks();
@@ -92,6 +93,20 @@ export default function Home() {
       !isFieldEmpty(book.summary) &&
       !isFieldEmpty(book.isbn?.isbn13)
     );
+  };
+
+  const handlePageInputChange = (e) => {
+    setPageInput(e.target.value);
+  };
+
+  const handlePageSubmit = (e) => {
+    if (e.key === 'Enter') {
+      const page = parseInt(pageInput);
+      if (!isNaN(page) && page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+        setPageInput('');
+      }
+    }
   };
 
   return (
@@ -196,30 +211,51 @@ export default function Home() {
         </div>
 
         {/* 分页 */}
-        <div className="mt-8 flex items-center justify-center gap-4">
+        <div className="flex items-center justify-center mt-4 gap-4">
           <button
-            onClick={() => setCurrentPage(currentPage - 1)}
+            onClick={() => setCurrentPage(1)}
             disabled={currentPage === 1}
+            className="w-[120px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400"
+          >
+            First Page
+          </button>
+
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="w-[120px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400"
           >
             Previous
           </button>
-
-          <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
-            <span className="font-medium">Page</span>
-            <span className="bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg font-semibold min-w-[40px] text-center">
-              {currentPage}
-            </span>
-            <span className="font-medium">of</span>
-            <span className="bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg font-semibold min-w-[40px] text-center">
-              {totalPages}
+          
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={pageInput}
+              onChange={handlePageInputChange}
+              onKeyDown={handlePageSubmit}
+              placeholder={currentPage.toString()}
+              className="w-[60px] h-[40px] text-center border border-zinc-400 rounded-[30px]"
+            />
+            <span className="text-zinc-600">
+              of {totalPages}
             </span>
           </div>
 
           <button
-            onClick={() => setCurrentPage(currentPage + 1)}
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
+            className="w-[120px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400"
           >
             Next
+          </button>
+
+          <button
+            onClick={() => setCurrentPage(totalPages)}
+            disabled={currentPage === totalPages}
+            className="w-[120px] h-[40px] flex items-center justify-center rounded-[30px] border border-zinc-400"
+          >
+            Last Page
           </button>
         </div>
 
