@@ -1,6 +1,6 @@
 # 📚 Book Data Pipeline
 
-The Book Data Pipeline is a collaborative project developed at Northeastern University, specifically designed to enhance and streamline [ReMo](https://remo.app/)'s book metadata management system. It is a modern web application for managing and transforming book metadata, built with Next.js and MongoDB. 
+The Book Data Pipeline is a collaborative project developed by students at Northeastern University, specifically designed to enhance and streamline [ReMo](https://remo.app/)'s book metadata management system. It is a modern web application for managing and transforming book metadata, built with Next.js and MongoDB. 
 
 ## ✨ Features
 
@@ -15,7 +15,7 @@ The Book Data Pipeline is a collaborative project developed at Northeastern Univ
 
 <img width="1156" alt="image" src="https://github.com/user-attachments/assets/d15f4e6d-9ae3-4d5e-b868-d9c76bb80095">
 
-<img width="1321" alt="image" src="https://github.com/user-attachments/assets/33285232-9641-408c-b0ec-4ec52df43bc8" />
+<img width="1287" alt="image" src="https://github.com/user-attachments/assets/79112892-48d6-40c4-a0bc-1d2e2fa09d68">
 
 <img width="1398" alt="image" src="https://github.com/user-attachments/assets/8681bad1-55b4-48e1-9778-d37ce43f2724">
 
@@ -58,31 +58,91 @@ The application uses MongoDB with the following book schema:
 ```javascript
 {
   title: {
-    main: String,    // Main title of the book
-    subtitle: String // Subtitle if any
+    main: {
+      type: String,
+      trim: true,
+      index: true      // Indexed for faster search
+    },
+    subtitle: {
+      type: String,
+      trim: true,
+      default: ''
+    }
   },
-  creators: [{       // Authors, editors, etc.
-    name: String,
-    role: String
+  creators: [{         // Authors, editors, etc.
+    name: {
+      type: String,
+      trim: true
+    },
+    role: {
+      type: String,
+      trim: true
+    }
   }],
-  copyright_date: Number,  // Publication year
-  summary: String,         // Book description
+  copyright_date: {    // Publication year
+    type: Number,
+    index: true,      // Indexed for faster search
+    default: 0
+  },
+  summary: {           // Book description
+    type: String,
+    trim: true,
+    default: ''
+  },
   series: {
-    name: String,         // Series name if part of one
-    position: Mixed       // Position in series
+    name: {
+      type: String,
+      trim: true,
+      default: ''
+    },
+    position: {
+      type: Mixed,     // Flexible type for different series numbering formats
+      trim: true,
+      default: ''
+    }
   },
   genre: {
-    main: String,        // Main genre
-    subgenres: [String]  // List of subgenres
+    main: {
+      type: String,
+      trim: true,
+      index: true,     // Indexed for faster genre-based searches
+      default: ''
+    },
+    subgenres: [{
+      type: String,
+      trim: true,
+      default: ''
+    }]
   },
-  form: String,          // Book format
-  pages: Number,         // Number of pages
+  form: {              // Book format
+    type: String,
+    trim: true,
+    index: true,       // Indexed for format-based filtering
+    default: ''
+  },
+  pages: {
+    type: Number,
+    min: 0,           // Cannot have negative pages
+    default: 0
+  },
   isbn: {
-    isbn13: String,      // 13-digit ISBN
-    isbn10: String       // 10-digit ISBN
+    isbn13: {
+      type: String,
+      sparse: true,    // Sparse indexing for optional fields
+      trim: true,
+      default: ''
+    },
+    isbn10: {
+      type: String,
+      sparse: true,    // Sparse indexing for optional fields
+      trim: true,
+      default: ''
+    }
   }
 }
 ```
+
+The schema includes several indexed fields for optimized querying and search operations. All string fields are trimmed automatically to remove leading and trailing whitespace. Default values are provided for optional fields.
 
 ## API Endpoints
 
@@ -119,5 +179,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🤝 Support
 
 For support, please open an issue in the GitHub repository or contact the maintainers.
-
-
